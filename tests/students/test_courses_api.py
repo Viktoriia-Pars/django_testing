@@ -44,17 +44,17 @@ def test_get_course(client, user):
 
     # Act
 
-    response = client.get('/api/v1/courses/')
-    response1 = client.get('/api/v1/students/')
+    response = client.get(f'/api/v1/courses/{cours2.pk}/')
+    response1 = client.get(f'/api/v1/students/{Ivan.pk}/')
 
     # Assert
     assert response.status_code == 200
     data = response.json()
     data1 = response1.json()
-    assert data[0]['id'] == 1
-    assert data[0]['name'] == 'Math'
-    assert data[0]['students'] == list(cours1.students.all())
-    assert data1[0]['birth_date'] == '1987-02-21'
+    assert data['id'] == cours2.pk
+    assert data['name'] == 'Literature'
+    assert data['students'] == list(cours2.students.all().values_list('pk', flat=True))
+    assert data1['birth_date'] == '1987-02-21'
 
 @pytest.mark.django_db
 def test_get_courses(client, user, courses_factory):
